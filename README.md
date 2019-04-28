@@ -24,3 +24,5 @@ Mocha and Chai are used for testing.
 To install, run `npm install`.
 
 To run the tests, run `npm run test`.
+
+**NOTE!** The test /test/func/deck.js references a test deck of cards. Change this to an existing file on the test system to ensure the test passes.
