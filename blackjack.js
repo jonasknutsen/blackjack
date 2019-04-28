@@ -8,7 +8,7 @@ let cardsDealer = []
 let winner = 'dealer'
 let drawIndex = 4
 
-async function blackjack() {
+async function blackjack () {
   await initGame()
   await startHands()
   await playGame()
@@ -18,24 +18,23 @@ async function blackjack() {
 blackjack()
 
 /* Main functions */
-async function initGame() {
+async function initGame () {
   if (process.argv[2] && (process.argv[2].includes('/') || process.argv[2].includes('\\'))) {
     console.log('dette', process.argv[2])
     playerDeck = await deck.deckFromFile(process.argv[2])
   } else {
     playerDeck = await deck.shuffleDeck(fullDeck)
   }
-  return
 }
 
-async function startHands() {
+async function startHands () {
   await cardsSam.push(playerDeck[0])
   await cardsDealer.push(playerDeck[1])
   await cardsSam.push(playerDeck[2])
   await cardsDealer.push(playerDeck[3])
 }
 
-async function playGame() {
+async function playGame () {
   if (await checkStartHand()) {
     return
   }
@@ -44,14 +43,14 @@ async function playGame() {
   await checkEndHands()
 }
 
-async function printResults() {
+async function printResults () {
   await console.log(winner)
   await console.log('sam: ', utils.textFromArray(cardsSam))
   await console.log('dealer: ', utils.textFromArray(cardsDealer))
 }
 
 /* Used by playGame */
-async function checkStartHand() {
+async function checkStartHand () {
   let scoreSam = utils.checkScore(cardsSam)
   let scoreDealer = utils.checkScore(cardsDealer)
   if (scoreSam === 21 && scoreDealer === 21) {
@@ -65,17 +64,16 @@ async function checkStartHand() {
   }
 }
 
-async function playSam() {
+async function playSam () {
   let scoreSam = utils.checkScore(cardsSam)
   while (scoreSam < 17) {
     cardsSam.push(playerDeck[drawIndex])
     scoreSam = utils.checkScore(cardsSam)
     drawIndex++
   }
-  return
 }
 
-async function playDealer() {
+async function playDealer () {
   let scoreDealer = utils.checkScore(cardsDealer)
   let scoreSam = utils.checkScore(cardsSam)
   if (scoreSam === 21) {
@@ -86,24 +84,19 @@ async function playDealer() {
     scoreDealer = utils.checkScore(cardsDealer)
     drawIndex++
   }
-  return
 }
 
-async function checkEndHands() {
+async function checkEndHands () {
   let scoreDealer = utils.checkScore(cardsDealer)
   let scoreSam = utils.checkScore(cardsSam)
   if (scoreSam > 21) {
     winner = 'dealer'
-    return
   } else if (scoreDealer > 21) {
     winner = 'sam'
-    return
   } else if (scoreSam > scoreDealer) {
     winner = 'sam'
-    return
   } else {
     winner = 'dealer'
-    return
   }
 }
 

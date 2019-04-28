@@ -1,12 +1,12 @@
 const fs = require('fs')
 const utils = require('./utils')
 
-async function deckFromFile(file) {
+async function deckFromFile (file) {
   let content = fs.readFileSync(file, 'utf8')
   return utils.arrayFromText(content)
 }
 
-async function shuffleDeck(fullDeck) {
+async function shuffleDeck (fullDeck) {
   // Based on the Durstenfeld shuffle
   // https://stackoverflow.com/a/12646864
   let simpleDeck = await justTheCardsPlease(fullDeck)
@@ -17,7 +17,7 @@ async function shuffleDeck(fullDeck) {
   return simpleDeck
 }
 
-async function justTheCardsPlease(deck) {
+async function justTheCardsPlease (deck) {
   let cards = deck.map((d) => {
     return d.card
   })

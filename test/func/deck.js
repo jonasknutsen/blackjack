@@ -1,7 +1,9 @@
+const chai = require('chai')
+const expect = chai.expect
 const deck = require('../../func/deck')
 const fullDeck = require('../../data/fullDeck')
 
-describe('func/deck.js', function() {
+describe('func/deck.js', function () {
   it('deckFromFile() - should return an array if valid input file', async function () {
     let returnValue = await deck.deckFromFile('/Users/jonas/code/blackjack/testdecks/deck1.txt')
     expect(returnValue)

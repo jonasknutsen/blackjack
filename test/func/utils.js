@@ -1,6 +1,8 @@
+const chai = require('chai')
+const expect = chai.expect
 const utils = require('../../func/utils')
 
-describe('func/utils.js', function() {
+describe('func/utils.js', function () {
   it('arrayFromText() - should return an array with values from comma separated string', async function () {
     let returnValue = await utils.arrayFromText('CA, D5, H9, HQ, S8')
     expect(returnValue)
