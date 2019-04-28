@@ -1,5 +1,6 @@
-const fs = require('fs')
-const fullDeck = require('./deck')
+const fullDeck = require('./data/fullDeck')
+const utils = require('./func/utils')
+const deck = require('./func/deck')
 
 let playerDeck = []
 let cardsSam = []
@@ -18,10 +19,11 @@ blackjack()
 
 /* Main functions */
 async function initGame() {
-  if (process.argv[2]) {
-    playerDeck = await deckFromFile(process.argv[2])
+  if (process.argv[2] && (process.argv[2].includes('/') || process.argv[2].includes('\\'))) {
+    console.log('dette', process.argv[2])
+    playerDeck = await deck.deckFromFile(process.argv[2])
   } else {
-    playerDeck = await shuffleDeck(fullDeck)
+    playerDeck = await deck.shuffleDeck(fullDeck)
   }
   return
 }
@@ -44,38 +46,14 @@ async function playGame() {
 
 async function printResults() {
   await console.log(winner)
-  await console.log('sam: ', textFromArray(cardsSam))
-  await console.log('dealer: ', textFromArray(cardsDealer))
-}
-
-/* Used by initGame() */
-async function deckFromFile(file) {
-  let content = fs.readFileSync(file, 'utf8')
-  return arrayFromText(content)
-}
-
-async function shuffleDeck(fullDeck) {
-  // Based on the Durstenfeld shuffle
-  // https://stackoverflow.com/a/12646864
-  let simpleDeck = await justTheCardsPlease(fullDeck)
-  for (let i = simpleDeck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [simpleDeck[i], simpleDeck[j]] = [simpleDeck[j], simpleDeck[i]];
-  }
-  return simpleDeck
-}
-
-async function justTheCardsPlease(deck) {
-  let cards = deck.map((d) => {
-    return d.card
-  })
-  return cards
+  await console.log('sam: ', utils.textFromArray(cardsSam))
+  await console.log('dealer: ', utils.textFromArray(cardsDealer))
 }
 
 /* Used by playGame */
 async function checkStartHand() {
-  let scoreSam = checkScore(cardsSam)
-  let scoreDealer = checkScore(cardsDealer)
+  let scoreSam = utils.checkScore(cardsSam)
+  let scoreDealer = utils.checkScore(cardsDealer)
   if (scoreSam === 21 && scoreDealer === 21) {
     winner = 'sam'
     return true
@@ -88,31 +66,32 @@ async function checkStartHand() {
 }
 
 async function playSam() {
-  let scoreSam = checkScore(cardsSam)
+  let scoreSam = utils.checkScore(cardsSam)
   while (scoreSam < 17) {
     cardsSam.push(playerDeck[drawIndex])
-    scoreSam = checkScore(cardsSam)
+    scoreSam = utils.checkScore(cardsSam)
     drawIndex++
   }
   return
 }
 
 async function playDealer() {
-  let scoreDealer = checkScore(cardsDealer)
-  let scoreSam = checkScore(cardsSam)
+  let scoreDealer = utils.checkScore(cardsDealer)
+  let scoreSam = utils.checkScore(cardsSam)
   if (scoreSam === 21) {
     return
   }
   while (scoreDealer <= scoreSam) {
     cardsDealer.push(playerDeck[drawIndex])
-    scoreDealer = checkScore(cardsDealer)
+    scoreDealer = utils.checkScore(cardsDealer)
     drawIndex++
   }
+  return
 }
 
 async function checkEndHands() {
-  let scoreDealer = checkScore(cardsDealer)
-  let scoreSam = checkScore(cardsSam)
+  let scoreDealer = utils.checkScore(cardsDealer)
+  let scoreSam = utils.checkScore(cardsSam)
   if (scoreSam > 21) {
     winner = 'dealer'
     return
@@ -128,22 +107,4 @@ async function checkEndHands() {
   }
 }
 
-/* Utils */
-function arrayFromText(text) {
-  return text.split(',').map((item) => {
-    return item.trim()
-  })
-}
-
-function textFromArray(array) {
-  return array.join(', ')
-}
-
-function checkScore(array) {
-  let sum = 0
-  for (i = 0; i < array.length; i++) {
-    let cardInfo = fullDeck.find(card => card.card === array[i])
-    sum = sum + cardInfo.value
-  }
-  return sum
-}
+module.exports = blackjack
