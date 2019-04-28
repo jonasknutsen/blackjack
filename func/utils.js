@@ -12,7 +12,7 @@ function textFromArray (array) {
 
 function checkScore (array) {
   let sum = 0
-  for (i = 0; i < array.length; i++) {
+  for (let i = 0; i < array.length; i++) {
     let cardInfo = fullDeck.find(card => card.card === array[i])
     sum = sum + cardInfo.value
   }
