@@ -20,7 +20,6 @@ blackjack()
 /* Main functions */
 async function initGame () {
   if (process.argv[2] && (process.argv[2].includes('/') || process.argv[2].includes('\\'))) {
-    console.log('dette', process.argv[2])
     playerDeck = await deck.deckFromFile(process.argv[2])
   } else {
     playerDeck = await deck.shuffleDeck(fullDeck)
@@ -99,5 +98,3 @@ async function checkEndHands () {
     winner = 'dealer'
   }
 }
-
-module.exports = blackjack

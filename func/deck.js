@@ -2,8 +2,12 @@ const fs = require('fs')
 const utils = require('./utils')
 
 async function deckFromFile (file) {
-  let content = fs.readFileSync(file, 'utf8')
-  return utils.arrayFromText(content)
+  try {
+    let content = fs.readFileSync(file, 'utf8')
+    return utils.arrayFromText(content)
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 async function shuffleDeck (fullDeck) {
